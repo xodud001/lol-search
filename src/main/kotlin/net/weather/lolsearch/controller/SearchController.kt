@@ -2,6 +2,7 @@ package net.weather.lolsearch.controller
 
 import net.weather.lolsearch.controller.response.MatchResponse
 import net.weather.lolsearch.controller.response.SearchResponse
+import net.weather.lolsearch.controller.response.StatsResponse
 import net.weather.lolsearch.service.SearchService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -18,7 +19,10 @@ class SearchController(
 
         val matches = search.matches.map { match -> MatchResponse.Mapper.from(match, search.puuid) }
 
-        return SearchResponse(matches);
+        return SearchResponse(
+            StatsResponse.Mapper.from(matches),
+            matches
+        );
     }
 
 }
