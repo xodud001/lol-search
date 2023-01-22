@@ -14,10 +14,8 @@ import java.net.URI
 @Component
 class RiotApiImpl: RiotApi {
 
-    private val apiKey: String = "RGAPI-5911c01c-bead-4c88-8268-e4fcdd398923";
-    private val client: WebClient = WebClient.builder()
-        .baseUrl("https://kr.api.riotgames.com")
-        .build();
+    private val apiKey: String = "RGAPI-020559eb-87cf-4220-aa77-763dc0981419";
+    private val client: WebClient = WebClient.builder().build();
 
     override fun getMatchIds(puuid: String): List<String> {
         val response = client.get()
@@ -41,16 +39,14 @@ class RiotApiImpl: RiotApi {
         return response ?: throw IllegalStateException("API 응답이 전달되지 않았습니다.")
     }
 
-    override fun findByNickname(nickname: String): SummonerDto {
+    override fun getSummonerByNickname(nickname: String): SummonerDto {
         val path = "/lol/summoner/v4/summoners/by-name/$nickname"
         return getSummoner(path)
     }
 
     private fun getSummoner(path: String): SummonerDto {
         val response = client.get()
-            .uri { uriBuilder: UriBuilder ->
-                uriBuilder.path(path).build()
-            }
+            .uri(URI.create("https://kr.api.riotgames.com$path"))
             .header("X-Riot-Token", apiKey)
             .retrieve()
             .onStatus({ other: HttpStatusCode? -> HttpStatus.NOT_FOUND == other })
