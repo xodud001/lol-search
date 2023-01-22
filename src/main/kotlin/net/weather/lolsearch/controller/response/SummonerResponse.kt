@@ -1,6 +1,8 @@
 package net.weather.lolsearch.controller.response
 
 import net.weather.lolsearch.riot.dto.ParticipantDto
+import net.weather.lolsearch.riot.dto.TeamDto
+import kotlin.math.roundToInt
 
 data class SummonerResponse(
 
@@ -13,6 +15,7 @@ data class SummonerResponse(
     val kills: Int,
     val deaths: Int,
     val assists: Int,
+    val killInvolvement: Int,
 
     val largestMultiKill: Int,
 
@@ -47,7 +50,10 @@ data class SummonerResponse(
     val win: Boolean,
 ){
     object Model{
-        fun from(participant: ParticipantDto): SummonerResponse{
+        fun from(participant: ParticipantDto, team: TeamDto): SummonerResponse{
+
+            val killInvolvement = (((participant.kills + participant.assists) / team.objectives.champion.kills.toDouble()) * 100).roundToInt();
+
             return SummonerResponse(
                 participant.puuid,
                 participant.champLevel,
@@ -56,6 +62,7 @@ data class SummonerResponse(
                 participant.kills,
                 participant.deaths,
                 participant.assists,
+                killInvolvement,
                 participant.largestMultiKill,
                 participant.summoner1Id,
                 participant.summoner2Id,

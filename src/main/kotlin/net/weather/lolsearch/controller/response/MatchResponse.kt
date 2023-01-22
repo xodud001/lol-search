@@ -12,12 +12,14 @@ data class MatchResponse(
     val gameMode: GameMode,          // 게임 모드
     val gameType: GameType,          // 게임 타입
     val gameName: String,            // 게임 이름
-    val summoner: SummonerResponse   // 소환사
+    val summoner: SummonerResponse,  // 소환사
+    val team: TeamResponse
 ){
     object Mapper {
         fun from(match: MatchDto, puuid: String): MatchResponse{
             val info = match.info;
             val targetParticipant = info.participants.first { it -> it.puuid == puuid };
+            val targetTeam = info.teams.first { it.teamId == targetParticipant.teamId }
 
             return MatchResponse(
                 info.gameCreation,
@@ -27,7 +29,8 @@ data class MatchResponse(
                 GameMode.valueOf(info.gameMode),
                 GameType.valueOf(info.gameType),
                 info.gameName,
-                SummonerResponse.Model.from(targetParticipant)
+                SummonerResponse.Model.from(targetParticipant, targetTeam),
+                TeamResponse.Model.from(targetTeam)
             )
         }
     }
