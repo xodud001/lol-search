@@ -3,6 +3,7 @@ package net.weather.lolsearch.riot.api
 import net.weather.lolsearch.riot.dto.MatchDto
 import net.weather.lolsearch.riot.exception.SummonerNotFoundException
 import net.weather.lolsearch.riot.dto.SummonerDto
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
@@ -11,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.util.UriBuilder
 import java.net.URI
 
+@Qualifier("riotApi")
 @Component
 class RiotApiImpl: RiotApi {
 
