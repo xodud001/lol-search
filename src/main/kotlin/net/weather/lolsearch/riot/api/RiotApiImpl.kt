@@ -51,7 +51,7 @@ class RiotApiImpl: RiotApi {
             .uri(URI.create("https://kr.api.riotgames.com$path"))
             .header("X-Riot-Token", apiKey)
             .retrieve()
-            .onStatus({ other: HttpStatusCode? -> HttpStatus.NOT_FOUND == other })
+            .onStatus({ obj: HttpStatusCode? -> obj == HttpStatus.NOT_FOUND })
             { throw SummonerNotFoundException("소환사가 존재하지 않습니다. $path") }
             .onStatus({ obj: HttpStatusCode -> obj.is4xxClientError })
             { throw IllegalArgumentException("요청이 잘못되었습니다.") }

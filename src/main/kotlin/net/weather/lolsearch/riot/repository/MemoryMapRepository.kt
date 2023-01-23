@@ -1,6 +1,8 @@
 package net.weather.lolsearch.riot.repository
 
-class MemoryMapRepository<TYPE, ID>(override val store: MutableMap<ID, TYPE> = mutableMapOf()) : Repository<TYPE, ID>  {
+import java.util.*
+
+class MemoryMapRepository<TYPE, ID>(override val store: MutableMap<ID, TYPE> = Collections.synchronizedMap(mutableMapOf())) : Repository<TYPE, ID>  {
 
     override fun findById(id: ID): TYPE? {
         return store[id];
