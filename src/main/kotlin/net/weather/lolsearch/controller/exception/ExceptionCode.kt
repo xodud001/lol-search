@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatusCode
 
 enum class ExceptionCode(val status: HttpStatus, val message: String) {
 
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "요청이 잘못되었습니다."),
+
     MATCH_NOT_FOUND(HttpStatus.NOT_FOUND, "요청한 매치를 찾을 수 없습니다."),
     SUMMONER_NOT_FOUND(HttpStatus.NOT_FOUND, "요청한 소환사를 찾을 수 없습니다."),
     RIOT_TOO_MANY_REQUEST(HttpStatus.TOO_MANY_REQUESTS, "요청이 너무 많습니다."),
