@@ -1,10 +1,8 @@
 package net.weather.lolsearch.riot.api
 
 import net.weather.lolsearch.riot.dto.MatchDto
-import net.weather.lolsearch.riot.exception.SummonerNotFoundException
 import net.weather.lolsearch.riot.dto.SummonerDto
-import net.weather.lolsearch.riot.exception.MatchNotFoundException
-import net.weather.lolsearch.riot.exception.RateLimitException
+import net.weather.lolsearch.riot.exception.*
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpStatus
@@ -31,13 +29,13 @@ class RiotApiImpl: RiotApi {
             .onStatus({ code: HttpStatusCode -> code == HttpStatus.TOO_MANY_REQUESTS})
             { throw RateLimitException("요청이 너무 많습니다.")}
             .onStatus({ obj: HttpStatusCode -> obj.is4xxClientError })
-            { throw IllegalArgumentException("요청이 잘못되었습니다.") }
+            { throw RiotClientException("요청이 잘못되었습니다.") }
             .onStatus({ obj: HttpStatusCode -> obj.is5xxServerError })
-            { throw IllegalStateException("Riot 서버에 문제가 발생했습니다.") }
+            { throw RiotServerException("Riot 서버에 문제가 발생했습니다.") }
             .bodyToMono(object : ParameterizedTypeReference<List<String>>(){})
             .block()
 
-        return response ?: throw IllegalStateException("API 응답이 전달되지 않았습니다.")
+        return response ?: throw RiotServerException("API 응답이 전달되지 않았습니다.")
     }
 
     override fun getMatch(matchId: String): MatchDto {
@@ -50,13 +48,13 @@ class RiotApiImpl: RiotApi {
             .onStatus({ code: HttpStatusCode -> code == HttpStatus.TOO_MANY_REQUESTS})
             { throw RateLimitException("요청이 너무 많습니다.")}
             .onStatus({ obj: HttpStatusCode -> obj.is4xxClientError })
-            { throw IllegalArgumentException("요청이 잘못되었습니다.") }
+            { throw RiotClientException("요청이 잘못되었습니다.") }
             .onStatus({ obj: HttpStatusCode -> obj.is5xxServerError })
-            { throw IllegalStateException("Riot 서버에 문제가 발생했습니다.") }
+            { throw RiotServerException("Riot 서버에 문제가 발생했습니다.") }
             .bodyToMono(MatchDto::class.java)
             .block()
 
-        return response ?: throw IllegalStateException("API 응답이 전달되지 않았습니다.")
+        return response ?: throw RiotServerException("API 응답이 전달되지 않았습니다.")
     }
 
     override fun getSummonerByNickname(nickname: String): SummonerDto {
@@ -74,12 +72,12 @@ class RiotApiImpl: RiotApi {
             .onStatus({ code: HttpStatusCode -> code == HttpStatus.TOO_MANY_REQUESTS})
             { throw RateLimitException("요청이 너무 많습니다.")}
             .onStatus({ obj: HttpStatusCode -> obj.is4xxClientError })
-            { throw IllegalArgumentException("요청이 잘못되었습니다.") }
+            { throw RiotClientException("요청이 잘못되었습니다.") }
             .onStatus({ obj: HttpStatusCode -> obj.is5xxServerError })
-            { throw IllegalStateException("Riot 서버에 문제가 발생했습니다.") }
+            { throw RiotServerException("Riot 서버에 문제가 발생했습니다.") }
             .bodyToMono(SummonerDto::class.java)
             .block()
 
-        return response ?: throw IllegalStateException("API 응답이 전달되지 않았습니다.")
+        return response ?: throw RiotServerException("API 응답이 전달되지 않았습니다.")
     }
 }
