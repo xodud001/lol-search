@@ -1,20 +1,20 @@
-package net.weather.lolsearch.service
+package net.weather.lolsearch.riot.api
 
-import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.mockk
-import net.weather.lolsearch.riot.api.RiotApi
+import io.mockk.verify
 import net.weather.lolsearch.riot.dto.*
-import org.assertj.core.api.Assertions.assertThat
+import net.weather.lolsearch.riot.repository.MemoryMapRepository
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
 
-class SearchServiceTest{
+class CachedProxyRiotAPiTest{
 
     private val riotApi: RiotApi = mockk()
-    private val searchService: SearchService = SearchService(riotApi)
+
+    private val proxyRiotApi: RiotApi = CachedProxyRiotAPi(
+        riotApi,
+        MemoryMapRepository(),
+        MemoryMapRepository())
 
     private fun summoner(puuid: String, nickname: String) =
         SummonerDto("", "", puuid, nickname, 100, 100, 100)
@@ -166,29 +166,30 @@ class SearchServiceTest{
     }
 
     @Test
-    fun `find matches`(){
-        val nickname = "TESTER"
-        val puuid = "TEST_PUUID"
-        val matchId = "KR_123456789"
-
+    fun `call getMatch of target only once`(){
+        val matchId = "MATCH_ID"
+        val puuid = "PUUID"
         val metadata = MetadataDto("1.0.0", "KR_123456789", listOf("P1"))
-        val info = infoDto(puuid)
+
+        every { riotApi.getMatch(matchId) } returns MatchDto(metadata, infoDto(puuid))
+
+        proxyRiotApi.getMatch(matchId)
+        proxyRiotApi.getMatch(matchId)
+        proxyRiotApi.getMatch(matchId)
+
+        verify(exactly = 1) { riotApi.getMatch(matchId) }
+    }
+    @Test
+    fun `call getSummonerByNickname of target only once`(){
+        val nickname = "NICKNAME"
+        val puuid = "PUUID"
 
         every { riotApi.getSummonerByNickname(nickname) } returns summoner(puuid, nickname)
-        every { riotApi.getMatchIds(puuid) } returns listOf(matchId)
-        every { riotApi.getMatch(matchId) } returns MatchDto(metadata, info)
 
-        val (matches) = searchService.findMatches(nickname)
+        proxyRiotApi.getSummonerByNickname(nickname)
+        proxyRiotApi.getSummonerByNickname(nickname)
+        proxyRiotApi.getSummonerByNickname(nickname)
 
-        assertThat(matches.size).isEqualTo(1);
-
-        val match = matches[0]
-        assertThat(match.metadata.matchId).isEqualTo(matchId)
-        assertThat(match.info.participants.size).isEqualTo(1)
-
-        val participant = match.info.participants[0]
-        assertThat(participant.puuid).isEqualTo(puuid)
-
+        verify(exactly = 1) { riotApi.getSummonerByNickname(nickname) }
     }
-
 }

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 class MathExtensionTest{
 
     @Test
-    fun `소수점 반올림`(){
+    fun `round the decimal point`(){
         val value = 1.123456789
 
         assertThat(MathExtension.round(value, -1)).isEqualTo(1.0);
