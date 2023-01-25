@@ -187,4 +187,17 @@ class SearchControllerTest(@Autowired val mockMvc: MockMvc) {
             .andExpect(jsonPath("\$.matches[0].summoner.puuid").value("TEST_PUUID"))
 
     }
+    @Test
+    fun `validate nickname`() {
+        val shortNickname = "a"
+        val longNickname = "abcdefg0123456789"
+
+        mockMvc.perform(get("/api/summoner/$shortNickname").accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest)
+
+        mockMvc.perform(get("/api/summoner/$longNickname").accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest)
+    }
+
+
 }

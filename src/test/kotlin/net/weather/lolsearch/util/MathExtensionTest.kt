@@ -9,6 +9,9 @@ class MathExtensionTest{
     @Test
     fun `소수점 반올림`(){
         val value = 1.123456789
+
+        assertThat(MathExtension.round(value, -1)).isEqualTo(1.0);
+        assertThat(MathExtension.round(value, 0)).isEqualTo(1.0);
         assertThat(MathExtension.round(value, 1)).isEqualTo(1.1);
         assertThat(MathExtension.round(value, 2)).isEqualTo(1.12);
         assertThat(MathExtension.round(value, 3)).isEqualTo(1.123);

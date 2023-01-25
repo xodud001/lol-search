@@ -2,6 +2,7 @@ package net.weather.lolsearch.controller
 
 import net.weather.lolsearch.controller.exception.ExceptionCode
 import net.weather.lolsearch.controller.exception.ExceptionResponse
+import net.weather.lolsearch.controller.exception.ValidationException
 import net.weather.lolsearch.riot.exception.*
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -33,6 +34,11 @@ class SearchAdvice {
     @ExceptionHandler(RiotServerException::class)
     fun matchNotFound(e : RiotServerException): ResponseEntity<ExceptionResponse> {
         return makeResponse(ExceptionCode.RIOT_SERVER_ERROR, e)
+    }
+
+    @ExceptionHandler(ValidationException::class)
+    fun matchNotFound(e : ValidationException): ResponseEntity<ExceptionResponse> {
+        return makeResponse(ExceptionCode.BAD_REQUEST, e)
     }
 
     private fun makeResponse(
