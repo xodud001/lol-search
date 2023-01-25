@@ -115,8 +115,14 @@ $ git clone https://github.com/xodud001/lol-search.git
 ### Riot API Key 설정
 * `/resources/applicaiton.properties`에 `props.riot-api-key` 속성에 발급 받은 key 설정
 
-### 실행
+### 테스트
+```shell
+$ cd lol-search
+$ ./gradlew test
 ```
+
+### 실행
+```shell
 $ cd lol-search
 $ ./gradlew bootRun
 ```
