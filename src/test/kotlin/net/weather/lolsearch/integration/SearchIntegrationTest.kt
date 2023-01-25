@@ -173,7 +173,7 @@ class SearchIntegrationTest(@Autowired val restTemplate: TestRestTemplate) {
     }
 
     @Nested
-    @DisplayName("사용자 이름으로 매치정보 조회")
+    @DisplayName("find matches by the summoner nickname")
     inner class SearchMatchByNickname{
         @Test
         fun `success`(){

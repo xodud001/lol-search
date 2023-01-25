@@ -16,6 +16,5 @@ class MemoryMapRepositoryTest {
 
         val value = repository.findById(1)
         assertThat(value).isEqualTo("VALUE2")
-
     }
 }

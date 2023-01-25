@@ -166,7 +166,7 @@ class SearchServiceTest{
     }
 
     @Test
-    fun `소환사 매치 정보 조회`(){
+    fun `find matches`(){
         val nickname = "TESTER"
         val puuid = "TEST_PUUID"
         val matchId = "KR_123456789"
